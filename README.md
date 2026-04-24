@@ -1,43 +1,146 @@
+# Tsunami
 
-Tsunami 2.5 is the most powerful DOS Tool by Ismail
+**Tsunami** is a command-line HTTP/2 stress-testing tool intended for **authorized security testing** and lab environments.
 
+> This repository is maintained by **Ismailkh356**.
 
-# 🔥 HTTP/2 Advanced Doser
+## Legal disclaimer
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+This project is for **AUTHORIZED SECURITY TESTING ONLY**. You must have explicit written permission from the system owner before using this tool. Unauthorized use may be illegal and unethical.
 
-**Professional-grade HTTP/2 stress testing tool for authorized security assessments**
+## Features
 
-## ⚠️ Legal Disclaimer
+- HTTP/2 support (multiplexing)
+- TLS/SSL (ALPN negotiation)
+- High concurrency
+- Custom headers / payloads
+- Basic live statistics (depending on build/options)
 
-This tool is for **AUTHORIZED SECURITY TESTING ONLY**. You must have explicit written permission from the system owner before using this tool. Unauthorized use is illegal and unethical.
+> Note: Feature availability depends on the current implementation in this repository.
 
-## 🎯 Features
+---
 
-- ✅ **HTTP/2 Support** - Full HTTP/2 protocol with multiplexing
-- ✅ **High Performance** - Thousands of concurrent connections
-- ✅ **TLS/SSL** - Complete TLS 1.2/1.3 with ALPN negotiation
-- ✅ **Rate Limiting** - Configurable requests per second
-- ✅ **Real-time Statistics** - Live throughput monitoring
-- ✅ **Tor Support** - Route through Tor network
-- ✅ **Custom Payloads** - POST data, custom headers, random User-Agent
-- ✅ **PCAP Export** - Capture traffic for analysis
-- ✅ **JSON Reports** - Generate detailed test reports
+## Installation
 
-## 📦 Installation
+### 1) Install build dependencies
 
-### Dependencies
+#### Debian / Ubuntu / Kali
 
 ```bash
-# Ubuntu/Debian / Kali Linux
-sudo apt-get install libnghttp2-dev libssl-dev build-essential
+sudo apt update
+sudo apt install -y git build-essential libnghttp2-dev libssl-dev
+```
 
-# Fedora/RHEL
-sudo dnf install libnghttp2-devel openssl-devel gcc make
+#### Fedora/RHEL
 
-# Arch Linux
-sudo pacman -S nghttp2 openssl gcc make
+```bash
+sudo dnf install -y git gcc gcc-c++ make libnghttp2-devel openssl-devel
+```
 
-# Termux (Android)
-pkg update && pkg install libnghttp2 openssl clang make
+#### Arch
+
+```bash
+sudo pacman -S --needed git base-devel nghttp2 openssl
+```
+
+### 2) Clone the repository
+
+```bash
+git clone https://github.com/Ismailkh356/Tsunami.git
+cd Tsunami
+```
+
+### 3) Build
+
+If the repo includes a Makefile:
+
+```bash
+make
+```
+
+If the repo ships a single C/C++ file (example build command):
+
+```bash
+# Example only — adjust filename/output to match this repo
+gcc -O2 -o tsunami *.c -lnghttp2 -lssl -lcrypto -lpthread
+```
+
+### 4) (Optional) Install system-wide
+
+```bash
+sudo install -m 0755 tsunami /usr/local/bin/tsunami
+```
+
+---
+
+## Usage
+
+Run the tool with `--help` (or `-h`) to see all options supported by your current build:
+
+```bash
+./tsunami --help
+# or, if installed system-wide
+tsunami --help
+```
+
+### Example commands (authorized testing only)
+
+> Replace `https://example.com/` with a target you own or have written permission to test.
+
+**Basic test (HTTPS / HTTP/2):**
+
+```bash
+./tsunami https://example.com/
+```
+
+**Run for a fixed duration (example: 30 seconds):**
+
+```bash
+./tsunami https://example.com/ --duration 30
+```
+
+**Increase concurrency (example: 200 connections):**
+
+```bash
+./tsunami https://example.com/ --connections 200
+```
+
+**Set a request rate limit (example: 500 req/s):**
+
+```bash
+./tsunami https://example.com/ --rate 500
+```
+
+**Add a custom header:**
+
+```bash
+./tsunami https://example.com/ --header "User-Agent: TsunamiLab" --header "X-Test: 1"
+```
+
+---
+
+## Troubleshooting
+
+### "command not found"
+
+- If you built locally, run it with `./tsunami` from the repo directory.
+- If you installed it, make sure `/usr/local/bin` is on your `PATH`.
+
+### Build errors about nghttp2 / OpenSSL
+
+- Ensure you installed the dev packages:
+  - `libnghttp2-dev` (Debian/Kali) or `libnghttp2-devel` (Fedora)
+  - `libssl-dev` / `openssl-devel`
+
+### Still stuck?
+
+Open an issue and include:
+- Your OS
+- The exact command you ran
+- The full error output
+
+---
+
+## License
+
+Add a license file to this repository (for example, MIT) and keep it consistent with any third-party code included.
