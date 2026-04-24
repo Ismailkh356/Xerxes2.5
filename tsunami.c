@@ -513,7 +513,11 @@ void* attack_thread_worker(void *arg) {
             // Reconnect if session is dead
             if (!sessions[i]) {
                 sessions[i] = create_h2_session(config);
-                if (!sessions[i]) continue;
+                if (!sessions[i]) {
+                    if (config->verbose)
+                        fprintf(stderr, "[Thread] Failed to reconnect session %d\n", i);
+                    continue;
+                }
             }
 
             int stream_id = submit_h2_request(sessions[i],
@@ -533,6 +537,8 @@ void* attack_thread_worker(void *arg) {
             // Process incoming frames (receive responses)
             if (nghttp2_session_recv(sessions[i]->session) < 0) {
                 // Session is broken — tear it down and reconnect next iteration
+                if (config->verbose)
+                    fprintf(stderr, "[Thread] Session %d recv error, reconnecting\n", i);
                 destroy_h2_session(sessions[i]);
                 sessions[i] = NULL;
             }
